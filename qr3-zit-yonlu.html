@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Neden Zıt Yönlü?</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:#0d1a0d;color:#fff;min-height:100vh;padding:0 0 28px}
+.topbar{background:linear-gradient(90deg,#1a3a1a,#2a8a4a,#1a3a1a);padding:8px 16px;text-align:center;font-size:10px;font-weight:700;letter-spacing:1.5px;color:#a0ffa0}
+.hero{text-align:center;padding:20px 20px 6px}
+.page-title{font-size:20px;font-weight:900;line-height:1.2;letter-spacing:.5px}
+.page-title .blue{color:#5b9bd5}
+.page-title .amp{color:#f0c040}
+.page-title .red{color:#e07070}
+.page-sub{font-size:13px;color:#8a8;margin-top:4px;font-weight:600}
+
+/* Temel kural kutusu */
+.rule-card{margin:12px 16px 0;background:rgba(240,192,64,0.1);border:2px solid #f0c040;border-radius:14px;padding:14px 16px;text-align:center}
+.rule-text{font-size:15px;font-weight:800;color:#f0c040;line-height:1.5}
+.rule-sub{font-size:12px;color:#cca;margin-top:5px;line-height:1.5}
+
+/* Periyodik eğilim haritası */
+.map-wrap{margin:12px 16px 0;background:#0a150a;border:1px solid rgba(91,155,213,0.2);border-radius:14px;padding:14px}
+.map-title{font-size:11px;font-weight:800;color:#a0ffa0;text-transform:uppercase;letter-spacing:.5px;text-align:center;margin-bottom:10px}
+.map-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.map-half{border-radius:10px;padding:10px;text-align:center}
+.map-half.blue{background:rgba(91,155,213,0.1);border:1px solid rgba(91,155,213,0.4)}
+.map-half.red{background:rgba(224,85,85,0.1);border:1px solid rgba(224,85,85,0.4)}
+.map-label{font-size:11px;font-weight:800;letter-spacing:.3px;margin-bottom:8px}
+.map-label.blue{color:#5b9bd5}
+.map-label.red{color:#e07070}
+.map-arrows{display:flex;flex-direction:column;gap:3px}
+.map-arrow{font-size:11px;color:#ccc;font-weight:600}
+
+/* Mantık zinciri */
+.chain-wrap{margin:10px 16px 0;background:#0a150a;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 16px}
+.chain-title{font-size:11px;font-weight:800;color:#a0ffa0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.chain-step{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.chain-step:last-child{margin-bottom:0}
+.chain-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0}
+.chain-text{font-size:13px;color:#ccc;line-height:1.5;padding-top:4px}
+.chain-connector{width:28px;text-align:center;font-size:14px;color:#555;margin:-4px 0 4px}
+
+/* Atom büyüklük karşılaştırma animasyonu */
+.vis-wrap{margin:10px 16px 0;background:#0a150a;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;overflow:hidden}
+.vis-title{font-size:11px;font-weight:800;color:#a0ffa0;text-transform:uppercase;letter-spacing:.5px;text-align:center;margin-bottom:10px}
+.atom-compare-row{display:flex;justify-content:space-around;align-items:flex-end;gap:4px}
+.atom-item{display:flex;flex-direction:column;align-items:center;gap:5px}
+.atom-circ{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;flex-shrink:0;transition:all .3s}
+.atom-sym{font-size:12px;font-weight:700;color:#ccc}
+.atom-rad{font-size:10px;color:#888}
+.atom-ie{font-size:10px;font-weight:700}
+.arrow-col{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding-bottom:8px}
+.arrow-col span{font-size:10px;color:#888}
+
+/* Örnek K */
+.k-example{margin:10px 16px 0;background:rgba(91,155,213,0.08);border:1.5px solid rgba(91,155,213,0.3);border-radius:12px;padding:12px 16px}
+.k-title{font-size:11px;font-weight:800;color:#5b9bd5;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.k-steps{display:flex;flex-direction:column;gap:5px}
+.k-step{font-size:13px;color:#ccd;line-height:1.5;display:flex;gap:8px}
+.k-step .bullet{color:#f0c040;flex-shrink:0}
+
+.mini-q{margin:10px 16px 0;background:rgba(80,200,120,0.08);border:1.5px solid rgba(80,200,120,0.4);border-radius:12px;padding:12px 16px}
+.mini-q-title{font-size:11px;font-weight:800;color:#60d080;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+.mini-q-text{font-size:14px;color:#ddd;line-height:1.5;font-weight:600}
+.answer-btn{margin-top:10px;width:100%;padding:10px;border-radius:8px;border:1.5px solid rgba(80,200,120,0.5);background:transparent;color:#60d080;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.answer-reveal{margin-top:8px;background:rgba(80,200,120,0.12);border-radius:8px;padding:10px;font-size:13px;color:#80f0a0;font-weight:600;display:none;line-height:1.6}
+.footer{margin:14px 16px 0;text-align:center;font-size:10px;color:#465;letter-spacing:.5px}
+.footer span{color:#60d080;font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="page-title">
+    <span class="blue">ATOM YARIYÇAPI</span> <span class="amp">&amp;</span><br>
+    <span class="red">İYONLAŞMA ENERJİSİ</span>
+  </div>
+  <div class="page-sub">Neden zıt yönlü değişirler?</div>
+</div>
+
+<!-- Temel kural -->
+<div class="rule-card">
+  <div class="rule-text">Bu iki özellik birbirine ZIT yönde değişir</div>
+  <div class="rule-sub">Atom yarıçapı arttıkça iyonlaşma enerjisi azalır.<br>Atom yarıçapı azaldıkça iyonlaşma enerjisi artar.</div>
+</div>
+
+<!-- Periyodik harita -->
+<div class="map-wrap">
+  <div class="map-title">Periyodik tabloda yön haritası</div>
+  <div class="map-grid">
+    <div class="map-half blue">
+      <div class="map-label blue">⬇⬅ ATOM YARIYÇAPI</div>
+      <div class="map-arrows">
+        <div class="map-arrow">⬇ Aşağı → Artar</div>
+        <div class="map-arrow">⬅ Sola → Artar</div>
+        <div class="map-arrow" style="color:#5b9bd5;font-weight:800;margin-top:4px">En büyük: Fr, Cs, Rb</div>
+      </div>
+    </div>
+    <div class="map-half red">
+      <div class="map-label red">⬆➡ İYONLAŞMA ENERJİSİ</div>
+      <div class="map-arrows">
+        <div class="map-arrow">⬆ Yukarı → Artar</div>
+        <div class="map-arrow">➡ Sağa → Artar</div>
+        <div class="map-arrow" style="color:#e07070;font-weight:800;margin-top:4px">En yüksek: He, Ne, F</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mantık zinciri -->
+<div class="chain-wrap">
+  <div class="chain-title">Mantık zinciri — neden ters?</div>
+  <div class="chain-step">
+    <div class="chain-dot" style="background:rgba(91,155,213,0.3);color:#5b9bd5">1</div>
+    <div class="chain-text">Atom büyüdükçe <strong>en dış elektron</strong> çekirdekten uzaklaşır.</div>
+  </div>
+  <div class="chain-connector">↓</div>
+  <div class="chain-step">
+    <div class="chain-dot" style="background:rgba(240,192,64,0.3);color:#f0c040">2</div>
+    <div class="chain-text">Uzak elektron, çekirdeğin <strong>çekim kuvvetini daha az</strong> hisseder.</div>
+  </div>
+  <div class="chain-connector">↓</div>
+  <div class="chain-step">
+    <div class="chain-dot" style="background:rgba(224,85,85,0.3);color:#e07070">3</div>
+    <div class="chain-text">Elektronu koparmak için <strong>daha az enerji</strong> yeterli olur.</div>
+  </div>
+  <div class="chain-connector">↓</div>
+  <div class="chain-step">
+    <div class="chain-dot" style="background:rgba(80,200,120,0.3);color:#60d080">✓</div>
+    <div class="chain-text"><strong>Büyük atom = Düşük iyonlaşma enerjisi</strong></div>
+  </div>
+</div>
+
+<!-- Görsel karşılaştırma -->
+<div class="vis-wrap">
+  <div class="vis-title">Görsel: F, Na, K karşılaştırması</div>
+  <div class="atom-compare-row">
+    <div class="atom-item">
+      <div class="atom-circ" style="width:30px;height:30px;background:#8e44ad;font-size:12px">F</div>
+      <div class="atom-sym">Flor</div>
+      <div class="atom-rad">R: 42 pm</div>
+      <div class="atom-ie" style="color:#e07070">IE: 1681</div>
+    </div>
+    <div class="arrow-col">
+      <span>yarıçap</span>
+      <span style="font-size:16px;color:#5b9bd5">→→</span>
+      <span>artar</span>
+    </div>
+    <div class="atom-item">
+      <div class="atom-circ" style="width:50px;height:50px;background:#c0392b;font-size:14px">Na</div>
+      <div class="atom-sym">Sodyum</div>
+      <div class="atom-rad">R: 190 pm</div>
+      <div class="atom-ie" style="color:#f0c040">IE: 496</div>
+    </div>
+    <div class="arrow-col">
+      <span>yarıçap</span>
+      <span style="font-size:16px;color:#5b9bd5">→→</span>
+      <span>artar</span>
+    </div>
+    <div class="atom-item">
+      <div class="atom-circ" style="width:70px;height:70px;background:#922b21;font-size:16px">K</div>
+      <div class="atom-sym">Potasyum</div>
+      <div class="atom-rad">R: 243 pm</div>
+      <div class="atom-ie" style="color:#60d080">IE: 419</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;font-size:11px;color:#888;text-align:center">Atom büyüdükçe iyonlaşma enerjisi (IE) düşüyor ✓</div>
+</div>
+
+<!-- K neden kolay elektron verir -->
+<div class="k-example">
+  <div class="k-title">💡 K neden kolay elektron verir?</div>
+  <div class="k-steps">
+    <div class="k-step"><span class="bullet">→</span><span>K 4 elektron kabuğuna sahiptir (en dış elektron çok uzak)</span></div>
+    <div class="k-step"><span class="bullet">→</span><span>İç kabuklar dışarıdaki elektronu çekirdekten "perdeler"</span></div>
+    <div class="k-step"><span class="bullet">→</span><span>Elektron çekirdeki neredeyse hissedemez → kolayca kopar</span></div>
+    <div class="k-step"><span class="bullet">✓</span><span style="color:#5b9bd5;font-weight:700">K iyonlaşma enerjisi: sadece 419 kJ/mol (çok düşük!)</span></div>
+  </div>
+</div>
+
+<div class="mini-q">
+  <div class="mini-q-title">🧩 Mini Soru</div>
+  <div class="mini-q-text">K neden kolay elektron verir? Atom yarıçapı ve iyonlaşma enerjisi bilgisiyle açıkla.</div>
+  <button class="answer-btn" onclick="this.style.display='none';document.getElementById('ans3').style.display='block'">Cevabı Göster</button>
+  <div class="answer-reveal" id="ans3">✅ <strong>K büyük bir atomdur</strong> (yarıçap: 243 pm)<br/>→ En dış elektron çekirdekten çok uzak<br/>→ Çekim kuvveti zayıf<br/>→ İyonlaşma enerjisi düşük (419 kJ/mol)<br/>→ <strong>Elektron kolayca kopar!</strong><br/><br/>Bu yüzden alkali metaller reaktiftir — hepsi büyük atom, düşük iyonlaşma enerjisi.</div>
+</div>
+
+</body>
+</html>

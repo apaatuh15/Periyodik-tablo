@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Atom Yarıçapı Nedir?</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:#0d1b35;color:#fff;min-height:100vh;padding:0 0 28px}
+.topbar{background:linear-gradient(90deg,#1a3a6e,#2a5aac,#1a3a6e);padding:8px 16px;text-align:center;font-size:10px;font-weight:700;letter-spacing:1.5px;color:#a0c4ff}
+.hero{text-align:center;padding:22px 20px 6px}
+.icon-wrap{width:72px;height:72px;border-radius:50%;background:rgba(91,155,213,0.15);border:2px solid #5b9bd5;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.page-title{font-size:26px;font-weight:900;color:#5b9bd5;letter-spacing:1px;line-height:1.1}
+.page-sub{font-size:13px;color:#7ab3e0;margin-top:4px;font-weight:600}
+
+.def-card{margin:14px 16px 0;background:rgba(91,155,213,0.1);border:1.5px solid #5b9bd5;border-radius:14px;padding:14px 16px}
+.def-text{font-size:14px;color:#ddeeff;line-height:1.7;text-align:center}
+
+/* Bohr animated */
+.bohr-wrap{margin:14px 16px 0;background:#0a1628;border:1px solid rgba(91,155,213,0.3);border-radius:14px;height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.bohr-wrap svg{width:160px;height:160px}
+.orbit1{animation:spin 4s linear infinite;transform-origin:80px 80px}
+.orbit2{animation:spin 7s linear infinite;transform-origin:80px 80px}
+.orbit3{animation:spin-r 10s linear infinite;transform-origin:80px 80px}
+.orbit4{animation:spin 14s linear infinite;transform-origin:80px 80px}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes spin-r{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
+.radius-line{stroke:#f0c040;stroke-width:1.2;stroke-dasharray:3,2;opacity:0.7}
+.radius-label{font-family:'Nunito',sans-serif;font-size:9px;fill:#f0c040;font-weight:700}
+
+.trend-section{margin:14px 16px 0}
+.trend-title{font-size:11px;font-weight:800;color:#a0c4ff;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;text-align:center}
+.trend-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.trend-card{background:rgba(91,155,213,0.08);border:1px solid rgba(91,155,213,0.3);border-radius:10px;padding:12px;text-align:center}
+.trend-arrow{font-size:26px;line-height:1}
+.trend-dir{font-size:12px;font-weight:800;color:#5b9bd5;margin-top:4px}
+.trend-why{font-size:11px;color:#8ab;line-height:1.4;margin-top:4px}
+
+.why-card{margin:10px 16px 0;background:rgba(240,192,64,0.08);border:1.5px solid rgba(240,192,64,0.4);border-radius:12px;padding:12px 16px}
+.why-title{font-size:11px;font-weight:800;color:#f0c040;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+.why-text{font-size:13px;color:#ddd;line-height:1.6}
+
+/* Comparison visual */
+.compare-wrap{margin:10px 16px 0;background:#0a1628;border:1px solid rgba(91,155,213,0.25);border-radius:12px;padding:14px 16px}
+.compare-title{font-size:11px;font-weight:800;color:#a0c4ff;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;text-align:center}
+.compare-row{display:flex;align-items:flex-end;justify-content:space-around;gap:8px;margin-bottom:8px}
+.atom-col{display:flex;flex-direction:column;align-items:center;gap:4px}
+.atom-circle{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;flex-shrink:0}
+.atom-label{font-size:11px;font-weight:700;color:#ccc}
+.atom-val{font-size:10px;color:#888}
+.vs-sign{font-size:18px;font-weight:900;color:#f0c040;align-self:center}
+.winner-tag{background:#5b9bd5;color:#fff;font-size:9px;font-weight:800;padding:2px 8px;border-radius:20px;margin-top:2px}
+
+.mini-q{margin:10px 16px 0;background:rgba(80,200,120,0.1);border:1.5px solid rgba(80,200,120,0.4);border-radius:12px;padding:12px 16px}
+.mini-q-title{font-size:11px;font-weight:800;color:#60d080;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+.mini-q-text{font-size:14px;color:#ddd;line-height:1.5;font-weight:600}
+.answer-btn{margin-top:10px;width:100%;padding:10px;border-radius:8px;border:1.5px solid rgba(80,200,120,0.5);background:transparent;color:#60d080;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.answer-btn:active{background:rgba(80,200,120,0.15)}
+.answer-reveal{margin-top:8px;background:rgba(80,200,120,0.12);border-radius:8px;padding:10px;font-size:13px;color:#80f0a0;font-weight:600;display:none;line-height:1.5}
+
+.footer{margin:14px 16px 0;text-align:center;font-size:10px;color:#456;letter-spacing:.5px}
+.footer span{color:#5b9bd5;font-weight:700}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="icon-wrap">
+    <svg width="38" height="38" viewBox="0 0 38 38">
+      <circle cx="19" cy="19" r="6" fill="#e05555"/>
+      <text x="19" y="22" text-anchor="middle" font-size="7" fill="white" font-weight="bold">+</text>
+      <ellipse cx="19" cy="19" rx="17" ry="7" fill="none" stroke="#5b9bd5" stroke-width="1.2"/>
+      <ellipse cx="19" cy="19" rx="17" ry="7" fill="none" stroke="#5b9bd5" stroke-width="1.2" transform="rotate(60,19,19)"/>
+      <circle cx="34" cy="16" r="2" fill="#f0c040"/>
+    </svg>
+  </div>
+  <div class="page-title">ATOM YARIYÇAPI</div>
+  <div class="page-sub">Nedir? Nasıl değişir?</div>
+</div>
+
+<!-- Tanım -->
+<div class="def-card">
+  <div class="def-text">Bir atomun <strong>çekirdeği</strong> ile <strong>en dış elektron katmanı</strong> arasındaki ortalama uzaklıktır.</div>
+</div>
+
+<!-- Bohr Animasyonu -->
+<div class="bohr-wrap">
+  <svg viewBox="0 0 160 160">
+    <!-- Nucleus -->
+    <circle cx="80" cy="80" r="10" fill="#e05555"/>
+    <text x="80" y="84" text-anchor="middle" font-size="8" fill="white" font-weight="bold">+</text>
+    <!-- Shell 1 -->
+    <circle cx="80" cy="80" r="22" fill="none" stroke="#5b9bd5" stroke-width="0.6" opacity="0.3"/>
+    <g class="orbit1"><circle cx="102" cy="80" r="4" fill="#5b9bd5"/></g>
+    <g style="animation:spin-r 4s linear infinite;transform-origin:80px 80px"><circle cx="58" cy="80" r="4" fill="#5b9bd5"/></g>
+    <!-- Shell 2 -->
+    <circle cx="80" cy="80" r="38" fill="none" stroke="#7ab3e0" stroke-width="0.6" opacity="0.3"/>
+    <g class="orbit2"><circle cx="118" cy="80" r="3.5" fill="#7ab3e0"/><circle cx="80" cy="42" r="3.5" fill="#7ab3e0"/></g>
+    <g style="animation:spin-r 7s linear infinite;transform-origin:80px 80px"><circle cx="42" cy="80" r="3.5" fill="#7ab3e0"/><circle cx="80" cy="118" r="3.5" fill="#7ab3e0"/></g>
+    <!-- Shell 3 -->
+    <circle cx="80" cy="80" r="54" fill="none" stroke="#9ec8f0" stroke-width="0.6" opacity="0.3"/>
+    <g class="orbit3"><circle cx="134" cy="80" r="3" fill="#9ec8f0"/><circle cx="107" cy="33" r="3" fill="#9ec8f0"/><circle cx="53" cy="127" r="3" fill="#9ec8f0"/></g>
+    <!-- Radius arrow -->
+    <line x1="80" y1="80" x2="134" y2="80" class="radius-line"/>
+    <polygon points="134,77 140,80 134,83" fill="#f0c040" opacity="0.8"/>
+    <text x="105" y="75" class="radius-label">yarıçap</text>
+  </svg>
+</div>
+
+<!-- Trend -->
+<div class="trend-section">
+  <div class="trend-title">Periyodik tabloda nasıl değişir?</div>
+  <div class="trend-grid">
+    <div class="trend-card">
+      <div class="trend-arrow">⬇</div>
+      <div class="trend-dir">Aşağı → Artar</div>
+      <div class="trend-why">Her periyotta yeni bir katman eklenir, atom büyür</div>
+    </div>
+    <div class="trend-card">
+      <div class="trend-arrow">⬅</div>
+      <div class="trend-dir">Sola → Artar</div>
+      <div class="trend-why">Proton azaldıkça çekim zayıflar, atom şişer</div>
+    </div>
+  </div>
+</div>
+
+<!-- Neden -->
+<div class="why-card">
+  <div class="why-title">💡 Neden?</div>
+  <div class="why-text">Katman sayısı arttıkça elektronlar çekirdekten daha uzak yörüngelerde bulunur. Ayrıca proton sayısı azaldıkça çekim kuvveti zayıflar ve atom genişler.</div>
+</div>
+
+<!-- Karşılaştırma görsel -->
+<div class="compare-wrap">
+  <div class="compare-title">Görsel karşılaştırma — Li ve K</div>
+  <div class="compare-row">
+    <div class="atom-col">
+      <div class="atom-circle" style="width:50px;height:50px;background:rgba(192,83,42,0.8);font-size:16px">Li</div>
+      <div class="atom-label">Lityum</div>
+      <div class="atom-val">167 pm</div>
+      <div class="atom-val">Periyot 2</div>
+    </div>
+    <div class="vs-sign">&lt;</div>
+    <div class="atom-col">
+      <div class="atom-circle" style="width:72px;height:72px;background:rgba(192,83,42,1);font-size:18px">K</div>
+      <div class="atom-label">Potasyum</div>
+      <div class="atom-val">243 pm</div>
+      <div class="atom-val">Periyot 4</div>
+      <div class="winner-tag">DAHA BÜYÜK ✓</div>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#888;text-align:center">K, Li'den 2 periyot aşağıda → 2 katman fazla → çok daha büyük</div>
+</div>
+
+<!-- Mini soru -->
+<div class="mini-q">
+  <div class="mini-q-title">🧩 Mini Soru</div>
+  <div class="mini-q-text">K mi, Li mi daha büyük atom yarıçapına sahiptir?</div>
+  <button class="answer-btn" onclick="this.style.display='none';document.getElementById('ans1').style.display='block'">Cevabı Göster</button>
+  <div class="answer-reveal" id="ans1">✅ <strong>K (Potasyum)</strong> daha büyüktür!<br/>K → Periyot 4 (4 kabuk)<br/>Li → Periyot 2 (2 kabuk)<br/>Daha fazla kabuk = daha büyük atom</div>
+</div>
+
+</body>
+</html>
