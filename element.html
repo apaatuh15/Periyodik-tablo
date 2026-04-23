@@ -23,10 +23,26 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 }
 .atom-viewer:active{cursor:grabbing;}
 #atomCanvas{display:block;width:100%;height:100%;}
+
 .atom-overlay{position:absolute;top:18px;left:22px;pointer-events:none;user-select:none;}
 .ov-sym{font-family:'Space Mono',monospace;font-size:58px;font-weight:700;line-height:1;letter-spacing:-2px;text-shadow:0 0 40px var(--accent);}
 .ov-name{font-size:14px;font-weight:300;color:rgba(255,255,255,0.45);margin-top:3px;}
 .ov-z{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,0.25);margin-top:5px;letter-spacing:.05em;}
+
+.electron-count{
+  position:absolute;top:18px;right:20px;pointer-events:none;
+  text-align:right;
+}
+.shell-info{font-family:'Space Mono',monospace;font-size:11px;color:rgba(255,255,255,0.25);line-height:1.7;}
+
+.ctrl{
+  position:absolute;bottom:16px;right:16px;
+  display:flex;align-items:center;gap:10px;
+  background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 14px;
+}
+.ctrl label{font-size:11px;color:var(--muted);}
+#spd{width:70px;accent-color:var(--accent);}
 
 /* BOTTOM GRID */
 .bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
@@ -39,6 +55,15 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .ulabel{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
 .utext{font-size:13px;line-height:1.6;}
 .disc{font-size:11px;color:var(--muted);margin-top:8px;}
+.ctitle{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+.bwrap{display:flex;flex-direction:column;gap:4px;}
+.brow{display:flex;align-items:center;gap:7px;}
+.bsym{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);width:18px;text-align:right;flex-shrink:0;}
+.btrack{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.bfill{height:100%;border-radius:3px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.bval{font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);width:38px;flex-shrink:0;}
+.cur .bsym{color:var(--accent);}
+.trnote{font-size:11px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);line-height:1.5;}
 </style>
 </head>
 <body>
@@ -51,6 +76,11 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
       <div class="ov-name" id="ovName"></div>
       <div class="ov-z"  id="ovZ"></div>
     </div>
+    <div class="electron-count" id="shellInfo"></div>
+    <div class="ctrl">
+      <label>Hız</label>
+      <input type="range" id="spd" min="0.1" max="4" step="0.1" value="1">
+    </div>
   </div>
 
   <div class="bottom">
@@ -58,12 +88,26 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
       <div class="props">
         <div class="prop"><div class="plabel">Atom No</div><div class="pval" id="pZ"></div></div>
         <div class="prop"><div class="plabel">Atom Kütlesi</div><div class="pval" id="pM"></div></div>
+        <div class="prop"><div class="plabel">Atom Yarıçapı</div><div class="pval" id="pR"></div></div>
+        <div class="prop"><div class="plabel">İyonlaşma E.</div><div class="pval" id="pIE"></div></div>
         <div class="prop"><div class="plabel">Periyot</div><div class="pval" id="pP"></div></div>
         <div class="prop"><div class="plabel">Grup</div><div class="pval" id="pG"></div></div>
       </div>
       <div class="ulabel">Kullanım Alanları</div>
       <div class="utext" id="pUses"></div>
       <div class="disc" id="pDisc"></div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;gap:18px;">
+      <div>
+        <div class="ctitle">⬤ Atom Yarıçapı — Aynı Periyot</div>
+        <div class="bwrap" id="rchart"></div>
+        <div class="trnote" id="rtrend"></div>
+      </div>
+      <div>
+        <div class="ctitle">⬤ İyonlaşma Enerjisi — Aynı Periyot</div>
+        <div class="bwrap" id="iechart"></div>
+        <div class="trnote" id="ietrend"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -88,8 +132,12 @@ document.getElementById('ovSym').textContent = el.sym;
 document.getElementById('ovSym').style.color = accent;
 document.getElementById('ovName').textContent = el.name;
 document.getElementById('ovZ').textContent = 'Z = ' + el.z + '   ·   ' + el.mass + ' u   ·   ' + el.shells.reduce((a,b)=>a+b,0) + ' elektron';
+document.getElementById('shellInfo').innerHTML = el.shells.map((c,i)=>
+  `<div class="shell-info">K${i+1}: ${c}e⁻</div>`).join('');
 document.getElementById('pZ').textContent = el.z;
 document.getElementById('pM').textContent = el.mass + ' u';
+document.getElementById('pR').textContent = el.radius + ' pm';
+document.getElementById('pIE').textContent = el.ie + ' kJ/mol';
 document.getElementById('pP').textContent = el.period + '. Periyot';
 document.getElementById('pG').textContent = el.group + '. Grup';
 document.getElementById('pUses').textContent = el.uses;
@@ -231,11 +279,13 @@ window.addEventListener('touchmove', e=>{
 },{passive:true});
 
 let t=0;
+const spdInput = document.getElementById('spd');
 function render() {
   requestAnimationFrame(render);
   t++;
+  const sp = parseFloat(spdInput.value);
 
-  if(!drag) root.rotation.y += 0.0025;
+  if(!drag) root.rotation.y += 0.0025*sp;
 
   // nucleus pulse
   const p = 1 + 0.045*Math.sin(t*0.045);
@@ -244,12 +294,35 @@ function render() {
 
   // orbit electrons
   orbitData.forEach(od => {
-    od.orbitGroup.rotation.z += od.speed;
+    od.orbitGroup.rotation.z += od.speed * sp;
   });
 
   renderer.render(scene, cam);
 }
 render();
+
+/* ─── Bar charts ─── */
+function buildChart(wrapId, prop, unit, color, trendId, trendTxt) {
+  const peers = ELEMENTS.filter(e => e.period===el.period && e[prop]>0);
+  const maxV  = Math.max(...peers.map(e=>e[prop]));
+  const wrap  = document.getElementById(wrapId);
+  peers.forEach(e => {
+    const pct = (e[prop]/maxV*100).toFixed(1);
+    const cur = e.z===el.z;
+    const row = document.createElement('div');
+    row.className = 'brow'+(cur?' cur':'');
+    row.innerHTML = `<div class="bsym">${e.sym}</div>
+      <div class="btrack"><div class="bfill" style="background:${cur?color:color+'40'}"></div></div>
+      <div class="bval">${e[prop]}${unit}</div>`;
+    wrap.appendChild(row);
+    setTimeout(()=>{ row.querySelector('.bfill').style.width=pct+'%'; },100);
+  });
+  document.getElementById(trendId).textContent = trendTxt;
+}
+buildChart('rchart','radius','pm',accent,'rtrend',
+  '📉 Soldan sağa atom yarıçapı küçülür — artan çekirdek yükü elektronları daha güçlü çeker.');
+buildChart('iechart','ie','',accent==='#f72585'?'#4cc9f0':'#f72585','ietrend',
+  '📈 Soldan sağa iyonlaşma enerjisi artar — elektronu koparmak giderek daha fazla enerji ister.');
 </script>
 </body>
 </html>
